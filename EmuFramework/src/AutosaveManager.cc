@@ -12,7 +12,7 @@
 
 	You should have received a copy of the GNU General Public License
 	along with EmuFramework.  If not, see <http://www.gnu.org/licenses/> */
-
+ 
 #include <emuframework/AutosaveManager.hh>
 #include <emuframework/EmuApp.hh>
 #include <emuframework/Option.hh>
