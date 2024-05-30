@@ -27,12 +27,12 @@ void ApplicationContext::flushSystemInputEvents()
 
 NativeDisplayConnection ApplicationContext::nativeDisplayConnection() const
 {
-	return (NativeDisplayConnection)application().xDisplay();
+	return {.conn = &application().xConnection(), .screen = &application().xScreen()};
 }
 
 PixelFormat ApplicationContext::defaultWindowPixelFormat() const
 {
-	return Config::MACHINE_IS_PANDORA ? PIXEL_FMT_RGB565 : PIXEL_FMT_RGBA8888;
+	return Config::MACHINE_IS_PANDORA ? PixelFmtRGB565 : PixelFmtRGBA8888;
 }
 
 }
