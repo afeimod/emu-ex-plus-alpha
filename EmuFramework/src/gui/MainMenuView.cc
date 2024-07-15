@@ -19,9 +19,9 @@
 #include <emuframework/CreditsView.hh>
 #include <emuframework/FilePicker.hh>
 #include <emuframework/VideoOptionView.hh>
-#include <emuframework/InputManagerView.hh>
 #include <emuframework/TouchConfigView.hh>
 #include <emuframework/BundledGamesView.hh>
+#include "InputManagerView.hh"
 #include "RecentContentView.hh"
 #include "FrameTimingView.hh"
 #include <emuframework/EmuOptions.hh>
@@ -346,11 +346,11 @@ OptionCategoryView::OptionCategoryView(ViewAttachParams attach):
 		attach,
 		[this](ItemMessage msg) -> ItemReply
 		{
-			return visit(overloaded
+			return msg.visit(overloaded
 			{
 				[&](const ItemsMessage &m) -> ItemReply { return EmuApp::hasGooglePlayStoreFeatures() ? std::size(subConfig) : std::size(subConfig)-1; },
 				[&](const GetItemMessage &m) -> ItemReply { return &subConfig[m.idx]; },
-			}, msg);
+			});
 		}
 	},
 	subConfig

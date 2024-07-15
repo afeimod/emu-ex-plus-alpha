@@ -157,7 +157,7 @@ class CustomVideoOptionView : public VideoOptionView, public MainAppHelper
 	MultiChoiceMenuItem defaultPalette
 	{
 		"Default Palette", attachParams(),
-		[this]()
+		[this]() -> int
 		{
 			if(system().defaultPaletteName.empty())
 				return 0;
@@ -528,7 +528,7 @@ private:
 	void onShow() final
 	{
 		updateTapeCounter();
-		tapeCounter.compile();
+		tapeCounter.place();
 	}
 };
 
@@ -546,7 +546,7 @@ public:
 	void onTapeMediaChange()
 	{
 		updateTapeText();
-		tapeSlot.compile();
+		tapeSlot.place();
 	}
 
 	void addTapeFilePickerView(Input::Event e, bool dismissPreviousView)
@@ -621,7 +621,7 @@ public:
 	void onROMMediaChange()
 	{
 		updateROMText();
-		romSlot.compile();
+		romSlot.place();
 	}
 
 	void addCartFilePickerView(Input::Event e, bool dismissPreviousView)
@@ -682,7 +682,7 @@ private:
 	void onDiskMediaChange(int slot)
 	{
 		updateDiskText(slot);
-		diskSlot[slot].compile();
+		diskSlot[slot].place();
 	}
 
 	void addDiskFilePickerView(Input::Event e, uint8_t slot, bool dismissPreviousView)
@@ -1004,7 +1004,7 @@ class MachineOptionView : public TableView, public MainAppHelper
 	MultiChoiceMenuItem palette
 	{
 		"Palette", attachParams(),
-		[this]()
+		[this]() -> int
 		{
 			if(!system().usingExternalPalette())
 				return 0;

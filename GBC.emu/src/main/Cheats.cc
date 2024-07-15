@@ -21,6 +21,7 @@
 #include <emuframework/Cheats.hh>
 #include <emuframework/EmuApp.hh>
 #include <emuframework/viewUtils.hh>
+#include <emuframework/Option.hh>
 #include "EmuCheatViews.hh"
 #include "MainSystem.hh"
 #include <main/Cheats.hh>
@@ -98,10 +99,8 @@ void writeCheatFile(EmuSystem &sys_)
 	for(auto &e : cheatList)
 	{
 		file.put(uint8_t(e.flags));
-		file.put(uint16_t(e.name.size()));
-		file.write(e.name.data(), e.name.size());
-		file.put(uint8_t(e.code.size()));
-		file.write(e.code.data(), e.code.size());
+		writeSizedData<uint16_t>(file, e.name);
+		writeSizedData<uint8_t>(file, e.code);
 	}
 }
 
@@ -133,10 +132,8 @@ void readCheatFile(EmuSystem &sys_)
 		GbcCheat cheat{};
 		auto flags = file.get<uint8_t>();
 		cheat.flags = flags;
-		auto nameLen = file.get<uint16_t>();
-		file.readSized(cheat.name, nameLen);
-		auto codeLen = file.get<uint8_t>();
-		file.readSized(cheat.code, codeLen);
+		readSizedData<uint16_t>(file, cheat.name);
+		readSizedData<uint8_t>(file, cheat.code);
 		cheatList.push_back(cheat);
 	}
 }
@@ -181,7 +178,7 @@ EmuEditCheatView::EmuEditCheatView(ViewAttachParams attach, GbcCheat &cheat_, Re
 					writeCheatFile(system());
 					static_cast<GbcSystem&>(app().system()).applyCheats();
 					ggCode.set2ndName(str);
-					ggCode.compile();
+					ggCode.place();
 					postDraw();
 					return true;
 				});
@@ -207,7 +204,7 @@ EmuEditCheatListView::EmuEditCheatListView(ViewAttachParams attach):
 		attach,
 		[this](ItemMessage msg) -> ItemReply
 		{
-			return visit(overloaded
+			return msg.visit(overloaded
 			{
 				[&](const ItemsMessage &m) -> ItemReply { return 1 + cheat.size(); },
 				[&](const GetItemMessage &m) -> ItemReply
@@ -218,7 +215,7 @@ EmuEditCheatListView::EmuEditCheatListView(ViewAttachParams attach):
 						default: return &cheat[m.idx - 1];
 					}
 				},
-			}, msg);
+			});
 		}
 	},
 	addGGGS

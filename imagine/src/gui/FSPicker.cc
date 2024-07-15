@@ -140,7 +140,7 @@ void FSPicker::onRightNavBtn(const Input::Event &e)
 		dismiss();
 }
 
-bool FSPicker::inputEvent(const Input::Event &e)
+bool FSPicker::inputEvent(const Input::Event& e, ViewInputEventParams)
 {
 	if(e.keyEvent())
 	{
@@ -177,7 +177,7 @@ void FSPicker::prepareDraw()
 	msgText.makeGlyphs();
 }
 
-void FSPicker::draw(Gfx::RendererCommands &__restrict__ cmds)
+void FSPicker::draw(Gfx::RendererCommands &__restrict__ cmds, ViewDrawParams) const
 {
 	if(!dirListThread.isWorking())
 	{
@@ -520,7 +520,7 @@ void FSPicker::listDirectory(CStringView path, ThreadStop &stop)
 					item.text.setActive(false);
 				return true;
 			});
-		std::sort(dir.begin(), dir.end(),
+		std::ranges::sort(dir,
 			[](const FileEntry &e1, const FileEntry &e2)
 			{
 				if(e1.isDir() && !e2.isDir())
